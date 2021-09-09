@@ -21,7 +21,7 @@ class AuthApi(
 ) {
 
     @PostMapping("login")
-    fun login(@RequestBody request: AuthRequest): ResponseEntity<UserView> = try {
+    fun login(@RequestBody request: AuthRequest): ResponseEntity<LoginResponseBody> = try {
         val auth: Authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(request.username, request.password)
         )
@@ -29,11 +29,13 @@ class AuthApi(
         val user: User = auth.principal as User
 
         ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.generateAccessToken(user))
-            .body(userViewMapper.toUserView(user))
+            .header(HttpHeaders.CONTENT_TYPE, "application/json")
+            .body(LoginResponseBody(jwtTokenUtil.generateAccessToken(user)))
     } catch (ex: BadCredentialsException) {
         ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
+
 }
 
+data class LoginResponseBody(val token: String)
 data class AuthRequest(val username: String, val password: String)

@@ -1,7 +1,7 @@
 package com.lukaszdutka.securityjwt.security
 
-import com.lukaszdutka.securityjwt.security.Role.Companion.admin
-import com.lukaszdutka.securityjwt.security.Role.Companion.user
+import com.lukaszdutka.securityjwt.security.Role.Companion.adminRole
+import com.lukaszdutka.securityjwt.security.Role.Companion.userRole
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Repository
 
@@ -13,14 +13,14 @@ class UserRepositoryImpl : UserRepository {
             "admin",
             "admin@gmail.com",
             "\$argon2id\$v=19\$m=15360,t=2,p=1\$faSKDbx74S76/T9CPFAcuA\$4rNl9GZPrAdKTSSgdE4H1oCph0qyaB3T5VHSz9kdi+Y", //"password123!",
-            true, true, admin()
+            true, true, adminRole()
         )
         this["user"] = User(
             "2",
             "user",
             "user@gmail.com",
             "\$argon2id\$v=19\$m=15360,t=2,p=1\$faSKDbx74S76/T9CPFAcuA\$4rNl9GZPrAdKTSSgdE4H1oCph0qyaB3T5VHSz9kdi+Y", //"password123!",
-            true, true, user()
+            true, true, userRole()
         )
     }
 

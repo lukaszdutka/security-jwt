@@ -9,5 +9,4 @@ class SimpleAuthenticationEntryPoint : AuthenticationEntryPoint {
     override fun commence(req: HttpServletRequest?, res: HttpServletResponse?, ex: AuthenticationException?) {
         res?.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex?.message)
     }
-
 }

@@ -2,7 +2,6 @@ package com.lukaszdutka.securityjwt.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.access.expression.SecurityExpressionHandler
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -10,10 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.config.core.GrantedAuthorityDefaults
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
-import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -43,12 +39,11 @@ class SecurityConfig(val userRepository: UserRepository, val jwtTokenFilter: Jwt
 
             .exceptionHandling()
             .authenticationEntryPoint(SimpleAuthenticationEntryPoint())
+
             .and()
             .authorizeRequests()
             .anyRequest().permitAll()
-            .and()
-            .authorizeRequests()
-            .expressionHandler(webExpressionHandler())
+
             .and()
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter().javaClass)
     }
@@ -68,16 +63,12 @@ class SecurityConfig(val userRepository: UserRepository, val jwtTokenFilter: Jwt
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
     }
-
-    @Bean
-    fun roleHierarchy(): RoleHierarchyImpl = RoleHierarchyImpl().apply { setHierarchy("ADMIN > USER") }
-
-    private fun webExpressionHandler(): SecurityExpressionHandler<FilterInvocation> =
-        DefaultWebSecurityExpressionHandler().apply { setRoleHierarchy(roleHierarchy()) }
 }
 
 @Configuration
-class GrantedAuthConfiguration {
+class RoleHierarchyConfig {
     @Bean
-    fun grantedAuthorityDefaults(): GrantedAuthorityDefaults = GrantedAuthorityDefaults("") // Remove the ROLE_ prefix
+    fun roleHierarchy(): RoleHierarchyImpl = RoleHierarchyImpl()
+        .apply { setHierarchy("ROLE_ADMIN > ROLE_USER") }
+        .also { println("Configure hierarchy.") }
 }

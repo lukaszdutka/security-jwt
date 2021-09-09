@@ -23,19 +23,11 @@ class JwtTokenUtil {
         .signWith(jwtSecretKey, SignatureAlgorithm.HS512)
         .compact()
 
-    fun getUsername(token: String): String = Jwts.parserBuilder()
-        .setSigningKey(jwtSecretKey)
-        .build()
-        .parseClaimsJws(token)
-        .body.subject
-        .split(",")[1]
+    fun getUsername(token: String): String = parseToken(token).body.subject.split(",")[1]
 
     fun validate(token: String): Boolean {
         try {
-            Jwts.parserBuilder()
-                .setSigningKey(jwtSecretKey)
-                .build()
-                .parseClaimsJws(token)
+            parseToken(token)
             return true
         } catch (ex: SignatureException) {
             println("Invalid JWT signature - ${ex.message}")
@@ -50,6 +42,11 @@ class JwtTokenUtil {
         }
         return false
     }
+
+    private fun parseToken(token: String) = Jwts.parserBuilder()
+        .setSigningKey(jwtSecretKey)
+        .build()
+        .parseClaimsJws(token)
 }
 
 private fun String.asBase64(): ByteArray? = Decoders.BASE64.decode(this)

@@ -4,11 +4,11 @@ import org.springframework.security.core.GrantedAuthority
 
 data class Role(val role: String) : GrantedAuthority {
     companion object {
-        const val USER = "USER"
-        const val ADMIN = "ADMIN"
+        const val ROLE_USER = "ROLE_USER"
+        const val ROLE_ADMIN = "ROLE_ADMIN"
 
-        fun user(): Role = Role(USER)
-        fun admin(): Role = Role(ADMIN)
+        fun userRole() = Role(ROLE_USER)
+        fun adminRole() = Role(ROLE_ADMIN)
     }
 
     override fun getAuthority(): String = role

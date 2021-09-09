@@ -9,11 +9,14 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("hello")
 class HelloRestController {
 
+    @GetMapping("anonymous")
+    fun helloAnonymous(): String = "Hello Anonymous"
+
     @GetMapping("user")
-    @RolesAllowed(Role.USER)
+    @RolesAllowed(Role.ROLE_USER)
     fun helloUser(): String = "Hello User"
 
     @GetMapping("admin")
-    @RolesAllowed(Role.ADMIN)
+    @RolesAllowed(Role.ROLE_ADMIN)
     fun helloAdmin(): String = "Hello Admin"
 }
